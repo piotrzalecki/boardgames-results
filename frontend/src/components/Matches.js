@@ -1,14 +1,21 @@
 import React, { useEffect, useState, Fragment }  from 'react';
 import Alert from './ui-components/Alert';
+import { Link } from "react-router-dom";
 
 function Matches(props){
  
   const [matches, setMatches] = useState([]);
   const [error, setError] = useState(null);
+  const [jwt, setJwt] = useState("");
 
   useEffect(() => {
+    const passedJwt = props.jwt;
+    console.log("passed jwt is " + passedJwt)
+    setJwt(passedJwt)
+    console.log("JWT is" + jwt)
     setMatches([
       {
+        "match_id": "1",
         "game": "Wingspawn",
         "winner": "Player_1",
         "match_date": "13-01-2022",
@@ -23,6 +30,7 @@ function Matches(props){
         ]
       },
       {
+        "match_id": "2",
         "game": "Everdell",
         "winner": "Player_44",
         "match_date": "25-01-2022",
@@ -57,24 +65,27 @@ function Matches(props){
           />
   } else {
   return (  
-    <Fragment>        
-      {matches.map((m) => (
-          <div class="card text-center mb-3">
-          <div class="card-header">
+    <Fragment>
+     
+      {matches.map((m, index) => (
+          <div className="card text-center mb-3" key={index}>
+          <div className="card-header">
             Match: <strong>{m.game}</strong>
           </div>
-          <div class="card-body">
-            <h5 class="card-title">{m.winner} won !!</h5>
-            <p class="card-text">
-            <ul class="list-group ">
-              {m.players.map((p) => (
-                <a href="#" class="list-group-item list-group-item-action">{p.name}: {p.score}</a>
-              ))}
-          </ul>
-            </p>
-            <a href="#" class="btn btn-primary">Edit</a>
+          <div className="card-body">
+            <h5 className="card-title">{m.winner} won !!</h5>
+            <div className="card-text">
+              <ul className="list-group ">
+                {m.players.map((p, index) => (
+                  <a key={index} href="#" className="list-group-item list-group-item-action">{p.name}: {p.score}</a>
+                ))}
+              </ul>
+            </div>
+            {jwt !=="" &&(
+              <Link to={`/match/edit/${m.match_id}`} className="btn btn-primary ms-1 mt-3">Edit</Link>
+            )}
           </div>
-          <div class="card-footer text-muted">
+          <div className="card-footer text-muted">
             {m.match_date}
           </div>
         </div>
