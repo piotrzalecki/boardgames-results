@@ -10,39 +10,22 @@ function Players(props){
 
   useEffect(() => {
     const passedJwt = props.jwt;
-    console.log("passed jwt is " + passedJwt)
+
     setJwt(passedJwt)
-    console.log("JWT is" + jwt)
-    setPlayers([
-      {
-        "player_id": "1",
-        "player_name": "Player_1",
-        "matches_number": "123",
-        "matches": [{
-          "game_name": "Wingspan",
-          "match_score": 33,
-          },
-          {
-            "game_name": "Wingspawn",
-            "score": 28,
-          },
-        ]
-      },
-      {
-        "player_id": "2",
-        "player_name": "Player_2",
-        "matches_number": "123",
-        "matches": [{
-          "game_name": "Wingspan",
-          "match_score": 33,
-          },
-          {
-            "game_name": "Wingspawn",
-            "score": 28,
-          },
-        ]
-      },
-    ]);
+
+    fetch("http://localhost:9090/v1/players")
+    .then((response) => {
+        if (response.status !== 200){
+            setError("Invalid response code: ", response.status);
+        } else {
+            setError(null);
+        }
+        return response.json();
+    })
+    .then((json) => {
+        setPlayers(json.players);
+    });
+
     if (false){
       setError({
         message: "soemthing",
@@ -74,7 +57,7 @@ function Players(props){
             <div className="card-text">
             <ul className="list-group ">
               {p.matches.map((m, index) => (
-                <a key={index} href="#" className="list-group-item list-group-item-action">{m.game_name}: {m.score}</a>
+                <a key={index} href="#" className="list-group-item list-group-item-action">{m.game_name}: {m.match_score}</a>
               ))}
           </ul>
             </div>
